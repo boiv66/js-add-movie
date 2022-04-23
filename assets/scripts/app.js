@@ -33,6 +33,7 @@ const clearInput = () => {
     }
 };
 
+let id = 0; 
 const addMovieCheck = () => {
     const titleMovie = userInput[0].value;
     const imgUrl = userInput[1].value; 
@@ -47,6 +48,7 @@ const addMovieCheck = () => {
     }
     
     const newMovie = {
+        id: id++,
         title: titleMovie,
         image: imgUrl, 
         rating: rating
@@ -89,7 +91,65 @@ const renderMovie = (title, url, rating) => {
         <p> ${rating}/5 </p> 
     </div>
     `;
+    newMovie.addEventListener('click', deleteMovie.bind(null, id));
     const root = document.getElementById('movie-list'); 
     root.append(newMovie); 
 }
 
+//delete movie
+const verifiedDelete = (movieId) => {
+    movie.splice(movieId-1, 1);
+    const root = document.getElementById('movie-list'); 
+    console.log(root.children[0]);
+    root.children[movieId-1].remove(); 
+    updateMovieUI(); 
+    
+}
+
+const cancelDeletion = () => {
+    modalVisibility(backdrop);
+    deleteModal.classList.remove('visible'); 
+}
+
+const deleteModal = document.getElementById("delete-modal"); 
+
+const deleteMovie = (movieId) => {
+   
+    deleteModal.classList.add('visible');
+    modalVisibility(backdrop);
+    backdrop.addEventListener('click', cancelDeletion); 
+
+    //cancel deletion button
+    const cancelDeletionButton = deleteModal.querySelector(".modal__actions .btn--passive");
+    // cancelDeletionButton.removeEventListener('click', cancelDeletion);
+
+    cancelDeletionButton.addEventListener('click', cancelDeletion);
+    //confirm deletion button
+    let confirmDeletionButton = deleteModal.querySelector(".modal__actions .btn--danger");
+    // confirmDeletionButton.replaceWith(confirmDeletionButton.cloneNode(true));
+    // confirmDeletionButton = deleteModal.querySelector(".modal__actions .btn--danger");
+    
+    confirmDeletionButton.addEventListener('click', () => {cancelDeletion(), verifiedDelete(movieId)}, true);
+    // verifiedDelete(); 
+
+
+
+
+    // newId = movieId
+
+}; 
+// -------------------
+// var newId;
+// let confirmDeletionButton = deleteModal.querySelector(".modal__actions .btn--danger");
+//     // confirmDeletionButton.replaceWith(confirmDeletionButton.cloneNode(true));
+//     // confirmDeletionButton = deleteModal.querySelector(".modal__actions .btn--danger");
+    
+// confirmDeletionButton.addEventListener('click', () => {cancelDeletion(), verifiedDelete(newId)});
+
+
+
+// both were execute, result print both a and b
+// many eventhandler create equal to amount the listener would execute
+// const abc = document.getElementById("abc")
+// abc.addEventListener('click', () => console.log("A"));
+// abc.addEventListener('click', () => console.log("b"));
